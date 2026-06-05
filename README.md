@@ -13,13 +13,13 @@
 ## Installation
 
 ```bash
-go build -o piccp ./cmd/piccp
+go install github.com/szogoon/piccp@latest
 ```
 
 ## Usage
 
 ```bash
-./piccp --config ~/.config/piccp/config.toml
+piccp --config ~/.config/piccp/config.toml
 ```
 
 ## Configuration (TOML)
