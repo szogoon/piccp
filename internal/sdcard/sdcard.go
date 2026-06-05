@@ -4,16 +4,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"os/exec"
-	"strconv"
 
 	"github.com/szogoon/piccp/internal/config"
 )
 
 type BlockDevice struct {
 	Name       string        `json:"name"`
-	Size       string        `json:"size"`
-	MountPoint string        `json:"mountpoint"`
-	Model      string        `json:"model"`
+	Size       json.Number   `json:"size"`
+	MountPoint *string       `json:"mountpoint"`
+	Model      *string       `json:"model"`
 	Children   []BlockDevice `json:"children"`
 }
 
@@ -50,16 +49,20 @@ func ListSDCards(cfg *config.SDCardConfig) ([]SDCard, error) {
 }
 
 func processDevice(dev BlockDevice, cfg *config.SDCardConfig, cards *[]SDCard) {
-	sizeBytes, _ := strconv.ParseFloat(dev.Size, 64)
-	sizeGB := sizeBytes / (1024 * 1024 * 1024)
+	sizeBytes, _ := dev.Size.Int64()
+	sizeGB := float64(sizeBytes) / (1024 * 1024 * 1024)
 
 	if sizeGB >= cfg.MinSizeGB && sizeGB <= cfg.MaxSizeGB {
 		// Check if it's mounted or has mounted partitions
-		mountPoint := dev.MountPoint
+		var mountPoint string
+		if dev.MountPoint != nil {
+			mountPoint = *dev.MountPoint
+		}
+
 		if mountPoint == "" && len(dev.Children) > 0 {
 			for _, child := range dev.Children {
-				if child.MountPoint != "" {
-					mountPoint = child.MountPoint
+				if child.MountPoint != nil && *child.MountPoint != "" {
+					mountPoint = *child.MountPoint
 					break
 				}
 			}
