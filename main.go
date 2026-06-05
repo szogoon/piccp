@@ -14,10 +14,18 @@ import (
 	"github.com/szogoon/piccp/internal/sdcard"
 )
 
+var Version = "0.0.4"
+
 func main() {
 	configPath := flag.String("config", "", "path to config file")
 	dryRun := flag.Bool("dry-run", false, "dry run")
+	versionFlag := flag.Bool("version", false, "print version and exit")
 	flag.Parse()
+
+	if *versionFlag {
+		fmt.Printf("piccp version %s\n", Version)
+		os.Exit(0)
+	}
 
 	cfg, err := config.LoadConfig(*configPath)
 	if err != nil {
