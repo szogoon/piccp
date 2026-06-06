@@ -14,7 +14,7 @@ import (
 	"github.com/szogoon/piccp/internal/sdcard"
 )
 
-var Version = "0.0.4"
+var Version = "dev"
 
 func main() {
 	configPath := flag.String("config", "", "path to config file")
