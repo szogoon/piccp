@@ -17,6 +17,11 @@ import (
 var Version = "dev"
 
 func main() {
+	flag.Usage = func() {
+		fmt.Fprintf(flag.CommandLine.Output(), "piccp is a CLI utility for importing photos and videos from SD cards on Linux.\n\nUsage:\n")
+		flag.PrintDefaults()
+	}
+
 	configPath := flag.String("config", "", "path to config file")
 	dryRun := flag.Bool("dry-run", false, "dry run")
 	versionFlag := flag.Bool("version", false, "print version and exit")
